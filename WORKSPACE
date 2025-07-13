@@ -23,8 +23,6 @@ http_archive(
     urls = ["https://github.com/bazelbuild/rules_webtesting/releases/download/0.3.5/rules_webtesting.tar.gz"],
 )
 
-# Use bazelbuild/rules_nodejs 5.7.0 with Node.js 18.10.0 (Option B: accept limitation)
-# Note: This limits us to Node.js 18.10.0 max, but ensures Bazel compatibility
 http_archive(
     name = "build_bazel_rules_nodejs",
     patches = [
@@ -40,10 +38,11 @@ load("@build_bazel_rules_nodejs//:repositories.bzl", "build_bazel_rules_nodejs_d
 
 build_bazel_rules_nodejs_dependencies()
 
-# Setup the Node.js toolchain with explicit version
-load("@build_bazel_rules_nodejs//:index.bzl", "node_repositories")
+# Setup the Node.js toolchain.
+load("@build_bazel_rules_nodejs//nodejs:repositories.bzl", "nodejs_register_toolchains")
 
-node_repositories(
+nodejs_register_toolchains(
+    name = "nodejs",
     node_version = "18.10.0",
 )
 
@@ -133,7 +132,7 @@ yarn_install(
     # with bin symlinks in the external repository. This is needed to link the shared
     # set of deps for example e2es.
     exports_directories_only = False,
-    manual_build_file_contents = """\
+    manual_build_file_contents = """
 filegroup(
     name = "node_modules_files",
     srcs = ["node_modules"],
