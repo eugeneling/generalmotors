@@ -6,7 +6,7 @@ index 77fcd99..8c65658 100755
  "Run end-to-end tests with Protractor"
  
  load("@build_bazel_rules_nodejs//nodejs:providers.bzl", "JSModuleInfo")
--load("@build_bazel_rules_nodejs//:index.bzl", "nodejs_binary")
+-load("@aspect_rules_js//js:defs.bzl", "nodejs_binary")
 +load("@angular//tools/esm-interop:index.bzl", "nodejs_binary")
  load("@build_bazel_rules_nodejs//:providers.bzl", "ExternalNpmPackageInfo", "JSNamedModuleInfo", "node_modules_aspect")
  load("@build_bazel_rules_nodejs//internal/common:windows_utils.bzl", "create_windows_native_launcher_script", "is_windows")

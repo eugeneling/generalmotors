@@ -1,4 +1,4 @@
-load("@build_bazel_rules_nodejs//:providers.bzl", "DeclarationInfo", "declaration_info")
+load("@aspect_rules_js//js:providers.bzl", "DeclarationInfo", "declaration_info")
 
 def bundle_type_declaration(
         ctx,

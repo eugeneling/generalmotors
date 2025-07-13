@@ -1,6 +1,6 @@
 """Macros for extending the NodeJS Bazel rules with ESM support."""
 
-load("@build_bazel_rules_nodejs//:index.bzl", _nodejs_binary = "nodejs_binary", _nodejs_test = "nodejs_test")
+load("@aspect_rules_js//js:defs.bzl", _nodejs_binary = "nodejs_binary", _nodejs_test = "nodejs_test")
 load("//tools/esm-interop:esm-node-module-loader.bzl", "enable_esm_node_module_loader")
 
 def nodejs_binary(

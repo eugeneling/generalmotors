@@ -1,5 +1,5 @@
 load("//tools:defaults.bzl", "jasmine_node_test", "ts_library")
-load("@build_bazel_rules_nodejs//:index.bzl", "copy_to_bin")
+load("@aspect_rules_js//js:defs.bzl", "copy_to_bin")
 
 ts_library(
     name = "test_lib",

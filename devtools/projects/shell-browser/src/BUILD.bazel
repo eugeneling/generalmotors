@@ -1,5 +1,5 @@
 load("@io_bazel_rules_sass//:defs.bzl", "sass_binary")
-load("@build_bazel_rules_nodejs//:index.bzl", "js_library", "pkg_web")
+load("@aspect_rules_js//js:defs.bzl", "js_library", "pkg_web")
 load("//devtools/tools:ng_module.bzl", "ng_module")
 load("//devtools/tools:typescript.bzl", "ts_library")
 load("//tools:defaults.bzl", "esbuild")

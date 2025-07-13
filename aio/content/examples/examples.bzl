@@ -1,4 +1,4 @@
-load("@build_bazel_rules_nodejs//:index.bzl", "npm_package_bin")
+load("@aspect_rules_js//js:defs.bzl", "npm_package_bin")
 load("@aspect_bazel_lib//lib:copy_to_directory.bzl", "copy_to_directory")
 load("//tools:defaults.bzl", "nodejs_test")
 load("//:yarn.bzl", "YARN_LABEL")

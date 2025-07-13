@@ -1,4 +1,4 @@
-load("@build_bazel_rules_nodejs//:index.bzl", "generated_file_test")
+load("@aspect_rules_js//js:defs.bzl", "generated_file_test")
 load("//tools:defaults.bzl", "nodejs_binary", "npm_package_bin")
 
 def partial_compliance_golden(filePath):
