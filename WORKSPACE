@@ -23,21 +23,8 @@ http_archive(
     urls = ["https://github.com/bazelbuild/rules_webtesting/releases/download/0.3.5/rules_webtesting.tar.gz"],
 )
 
-# Use bazel-contrib/rules_nodejs 6.4.0 for Node.js 20+ support
-http_archive(
-    name = "rules_nodejs",
-    sha256 = "8bfd114e95e88df5ecc66b03b726944f47a8b46db4b3b6ace87cfc316713bd1c",
-    urls = ["https://github.com/bazel-contrib/rules_nodejs/releases/download/v6.4.0/rules_nodejs-v6.4.0.tar.gz"],
-)
-
-load("@rules_nodejs//nodejs:repositories.bzl", "nodejs_register_toolchains")
-
-nodejs_register_toolchains(
-    name = "nodejs",
-    node_version = "20.11.0",
-)
-
-# Use bazelbuild/rules_nodejs for yarn_install functionality (hybrid approach)
+# Use bazelbuild/rules_nodejs 5.7.0 with Node.js 18.10.0 (Option B: accept limitation)
+# Note: This limits us to Node.js 18.10.0 max, but ensures Bazel compatibility
 http_archive(
     name = "build_bazel_rules_nodejs",
     patches = [
@@ -52,6 +39,13 @@ http_archive(
 load("@build_bazel_rules_nodejs//:repositories.bzl", "build_bazel_rules_nodejs_dependencies")
 
 build_bazel_rules_nodejs_dependencies()
+
+# Setup the Node.js toolchain with explicit version
+load("@build_bazel_rules_nodejs//:index.bzl", "node_repositories")
+
+node_repositories(
+    node_version = "18.10.0",
+)
 
 # The PKG rules are needed to build tar packages for integration tests. The builtin
 # rule in `@bazel_tools` is not Windows compatible and outdated.
