@@ -2,7 +2,8 @@ load("//tools:defaults.bzl", "protractor_web_test_suite", "ts_library")
 
 def example_test(name, srcs, server, data = [], deps = [], use_legacy_webdriver_types = True, **kwargs):
     ts_deps = [
-        "@npm//@angular/build-tooling/bazel/benchmark/driver-utilities",
+        # TODO: Migrate to rules_js equivalent - @npm/@angular/build-tooling causes cycle detection errors
+        # "@npm//@angular/build-tooling/bazel/benchmark/driver-utilities",
         "//packages/private/testing",
         "@npm//@types/selenium-webdriver",
         "@npm//protractor",

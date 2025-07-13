@@ -31,8 +31,8 @@ mkdir -p .angular_packages/language-service
 cp -r "${bazel_bin}/packages/language-service/npm_package/" .angular_packages/language-service
 chmod -R +w .angular_packages/language-service
 cat <<EOT >> .angular_packages/language-service/BUILD.bazel
-load("@aspect_rules_js//npm:defs.bzl", "npm_package")
-npm_package(
+load("@build_bazel_rules_nodejs//:index.bzl", "pkg_npm")
+pkg_npm(
   name = "language-service",
   srcs = glob(["**"], exclude = ["BUILD.bazel"]),
   visibility = ["//visibility:public"],

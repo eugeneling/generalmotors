@@ -1,7 +1,8 @@
 load("//devtools:packages.bzl", "ANGULAR_PACKAGES")
-load("@npm//@angular/build-tooling/bazel/esbuild:index.bzl", "esbuild")
-load("@aspect_rules_js//npm:defs.bzl", "LinkerPackageMappingInfo")
-load("@aspect_rules_js//js:providers.bzl", "ExternalNpmPackageInfo", "JSModuleInfo")
+# TODO: Re-enable @angular/build-tooling with rules_js compatibility
+# load("@npm//@angular/build-tooling/bazel/esbuild:index.bzl", "esbuild")
+load("@build_bazel_rules_nodejs//:index.bzl", "LinkerPackageMappingInfo")
+load("@build_bazel_rules_nodejs//:providers.bzl", "ExternalNpmPackageInfo", "JSModuleInfo")
 
 """
   Starlark file exposing a definition for generating Angular linker-processed ESM bundles

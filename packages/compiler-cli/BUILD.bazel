@@ -1,4 +1,5 @@
-load("@npm//@bazel/esbuild:index.bzl", "esbuild", "esbuild_config")
+load("@build_bazel_rules_nodejs//:index.bzl", "nodejs_binary")
+load("@build_bazel_rules_nodejs//:index.bzl", "npm_package_bin")
 load("//packages/bazel/src:ng_perf.bzl", "ng_perf_flag")
 load("//tools:defaults.bzl", "api_golden_test", "extract_types", "pkg_npm", "ts_config", "ts_library")
 
@@ -87,7 +88,8 @@ ts_library(
         "//packages/compiler-cli/src/ngtsc/typecheck/api",
         "//packages/compiler-cli/src/ngtsc/util",
         "//packages/compiler-cli/src/transformers/downlevel_decorators_transform",
-        "@npm//@bazel/concatjs",
+        # TODO: Migrate to rules_js equivalent - @npm/@bazel/concatjs causes cycle detection errors
+        # "@npm//@bazel/concatjs",
         "@npm//@types/node",
         "@npm//@types/yargs",
         "@npm//chokidar",

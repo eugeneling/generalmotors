@@ -1,5 +1,5 @@
 load("//tools:defaults.bzl", "nodejs_binary")
-load("@aspect_rules_js//js:defs.bzl", "js_library")
+load("@build_bazel_rules_nodejs//:index.bzl", "js_library")
 load("@aio_npm//@bazel/jasmine:index.bzl", "jasmine_node_test")
 load("//aio/content/examples:examples.bzl", "EXAMPLES")
 load("//:packages.bzl", "AIO_EXAMPLE_PACKAGES", "to_package_label")

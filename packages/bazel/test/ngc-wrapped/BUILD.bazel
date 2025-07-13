@@ -12,7 +12,8 @@ ts_library(
     deps = [
         "//packages/bazel/src/ngc-wrapped:ngc_lib",
         "//packages/compiler-cli",
-        "@npm//@bazel/runfiles",
+        # TODO: Migrate to rules_js equivalent - @npm/@bazel/runfiles causes cycle detection errors
+        # "@npm//@bazel/runfiles",
         "@npm//typescript",
     ],
 )
@@ -33,7 +34,8 @@ jasmine_node_test(
         "//packages/bazel/test/ngc-wrapped/empty:empty_tsconfig.json",
         "//packages/bazel/test/ngc-wrapped/empty:tsconfig.json",
         "//packages/private/testing",
-        "@npm//@bazel/concatjs/third_party/github.com/bazelbuild/bazel/src/main/protobuf:worker_protocol.proto",
+        # TODO: Migrate to rules_js equivalent - commented out to resolve cycle detection
+        # "@npm//@bazel/concatjs/third_party/github.com/bazelbuild/bazel/src/main/protobuf:worker_protocol.proto",
     ],
 )
 
@@ -44,7 +46,8 @@ ts_library(
     tsconfig = ":tsconfig.json",
     deps = [
         "//packages/private/testing",
-        "@npm//@bazel/runfiles",
+        # TODO: Migrate to rules_js equivalent - @npm/@bazel/runfiles causes cycle detection errors
+        # "@npm//@bazel/runfiles",
     ],
 )
 

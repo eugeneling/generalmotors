@@ -25,7 +25,8 @@ pkg_npm(
         # NodeJS binaries are pre-built and should be consumed through the NPM bin scripts of the package.
         "//packages/bazel/src/types_bundle:types_bundler": "@npm//@angular/bazel/bin:types_bundler",
         "//packages/bazel/": "//@angular/bazel/",
-        "@npm//@bazel/concatjs/internal:": "//@bazel/concatjs/internal:",
+        # TODO: Migrate to rules_js equivalent - commenting out to resolve cycle detection errors
+        # "@npm//@bazel/concatjs/internal:": "//@bazel/concatjs/internal:",
     },
     # Do not add more to this list.
     # Dependencies on the full npm_package cause long re-builds.

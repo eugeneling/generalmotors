@@ -122,11 +122,12 @@ build:remote --cpu=k8
 build:remote --host_cpu=k8
 
 # Toolchain and platform related flags
-build:remote --crosstool_top=@npm//@angular/build-tooling/bazel/remote-execution/cpp:cc_toolchain_suite
-build:remote --extra_toolchains=@npm//@angular/build-tooling/bazel/remote-execution/cpp:cc_toolchain
-build:remote --extra_execution_platforms=@npm//@angular/build-tooling/bazel/remote-execution:platform
-build:remote --host_platform=@npm//@angular/build-tooling/bazel/remote-execution:platform
-build:remote --platforms=@npm//@angular/build-tooling/bazel/remote-execution:platform
+# TODO: Migrate to rules_js equivalent - @npm/@angular/build-tooling causes cycle detection errors
+# build:remote --crosstool_top=@npm//@angular/build-tooling/bazel/remote-execution/cpp:cc_toolchain_suite
+# build:remote --extra_toolchains=@npm//@angular/build-tooling/bazel/remote-execution/cpp:cc_toolchain
+# build:remote --extra_execution_platforms=@npm//@angular/build-tooling/bazel/remote-execution:platform
+# build:remote --host_platform=@npm//@angular/build-tooling/bazel/remote-execution:platform
+# build:remote --platforms=@npm//@angular/build-tooling/bazel/remote-execution:platform
 
 # Remote instance and caching
 build:remote --remote_instance_name=projects/internal-200822/instances/primary_instance
@@ -142,6 +143,7 @@ common --experimental_allow_tags_propagation
 # Disable network access in the sandbox by default. To enable network access
 # for a particular target, use:
 #
+# TODO: Migrate to rules_js equivalent - @npm/@angular/build-tooling causes cycle detection errors
 # load("@npm//@angular/build-tooling/bazel/remote-execution:index.bzl", "ENABLE_NETWORK")
 # my_target(
 #   ...,

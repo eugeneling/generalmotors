@@ -1,5 +1,5 @@
 # Note: This file is shipped to NPM. It cannot use the `defaults.bzl` macro.
-load("@aspect_rules_js//js:defs.bzl", "nodejs_binary")
+load("@build_bazel_rules_nodejs//:index.bzl", "nodejs_binary")
 
 package(default_visibility = ["//visibility:public"])
 

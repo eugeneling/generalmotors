@@ -1,5 +1,9 @@
 workspace(
     name = "angular",
+    managed_directories = {
+        "@npm": ["node_modules"],
+        "@aio_npm": ["aio/node_modules"],
+    },
 )
 
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
@@ -21,47 +25,28 @@ http_archive(
 
 
 
-# Use bazel-contrib/rules_nodejs 6.4.0 for Node.js 20+ support
 http_archive(
-    name = "rules_nodejs",
-    sha256 = "8bfd114e95e88df5ecc66b03b726944f47a8b46db4b3b6ace87cfc316713bd1c",
-    strip_prefix = "rules_nodejs-6.4.0",
-    url = "https://github.com/bazel-contrib/rules_nodejs/releases/download/v6.4.0/rules_nodejs-v6.4.0.tar.gz",
+    name = "build_bazel_rules_nodejs",
+    patches = [
+        # TODO(devversion): remove when https://github.com/bazelbuild/rules_nodejs/pull/3605 is available.
+        "//tools:bazel-repo-patches/rules_nodejs__#3605.patch",
+        "//tools/esm-interop:patches/bazel/nodejs_binary_esm_support.patch",
+    ],
+    sha256 = "c29944ba9b0b430aadcaf3bf2570fece6fc5ebfb76df145c6cdad40d65c20811",
+    urls = ["https://github.com/bazelbuild/rules_nodejs/releases/download/5.7.0/rules_nodejs-5.7.0.tar.gz"],
 )
 
+load("@build_bazel_rules_nodejs//:repositories.bzl", "build_bazel_rules_nodejs_dependencies")
+
+build_bazel_rules_nodejs_dependencies()
+
+# Setup the Node.js toolchain.
 load("@rules_nodejs//nodejs:repositories.bzl", "nodejs_register_toolchains")
+
 nodejs_register_toolchains(
     name = "nodejs",
-    node_version = "20.19.0",
+    node_version = "18.10.0",
 )
-
-# Load rules_js for modern dependency management
-http_archive(
-    name = "aspect_rules_js",
-    sha256 = "75c25a0f15a9e4592bbda45b57aa089e4bf17f9176fd735351e8c6444df87b52",
-    strip_prefix = "rules_js-2.1.0",
-    url = "https://github.com/aspect-build/rules_js/releases/download/v2.1.0/rules_js-v2.1.0.tar.gz",
-)
-
-load("@aspect_rules_js//js:repositories.bzl", "rules_js_dependencies")
-rules_js_dependencies()
-
-load("@aspect_bazel_lib//lib:repositories.bzl", "aspect_bazel_lib_register_toolchains")
-aspect_bazel_lib_register_toolchains()
-
-load("@aspect_rules_js//npm:repositories.bzl", "npm_translate_lock")
-
-# Use yarn.lock instead of pnpm-lock.yaml for gradual migration
-npm_translate_lock(
-    name = "npm",
-    yarn_lock = "//:yarn.lock",
-    data = [
-        "//:package.json",
-    ],
-)
-
-load("@npm//:repositories.bzl", "npm_repositories")
-npm_repositories()
 
 # The PKG rules are needed to build tar packages for integration tests. The builtin
 # rule in `@bazel_tools` is not Windows compatible and outdated.
@@ -89,26 +74,104 @@ load("@aspect_bazel_lib//lib:repositories.bzl", "aspect_bazel_lib_dependencies")
 
 aspect_bazel_lib_dependencies()
 
+# Download npm dependencies.
+load("@build_bazel_rules_nodejs//:index.bzl", "yarn_install")
+load("//integration:npm_package_archives.bzl", "npm_package_archives")
 
-# TODO: Update protractor dependencies for rules_js compatibility
-# load("@npm//:@bazel/protractor/package.bzl", "npm_bazel_protractor_dependencies")
-# npm_bazel_protractor_dependencies()
+yarn_install(
+    name = "npm",
+    # Note that we add the postinstall scripts here so that the dependencies are re-installed
+    # when the postinstall patches are modified.
+    data = [
+        YARN_LABEL,
+        "//:.yarnrc",
+        "//tools:postinstall-patches.js",
+        "//tools/esm-interop:patches/npm/@angular+build-tooling+0.0.0-e859696da7af56c811b6589f1ae888222d93d797.patch",
+        "//tools/esm-interop:patches/npm/@bazel+concatjs+5.8.1.patch",
+        "//tools/esm-interop:patches/npm/@bazel+esbuild+5.8.1.patch",
+        "//tools/esm-interop:patches/npm/@bazel+protractor+5.8.1.patch",
+        "//tools/esm-interop:patches/npm/rxjs+6.6.7.patch",
+    ],
+    # Currently disabled due to:
+    #  1. Missing Windows support currently.
+    #  2. Incompatibilites with the `ts_library` rule.
+    exports_directories_only = False,
+    manual_build_file_contents = npm_package_archives(),
+    package_json = "//:package.json",
+    # We prefer to symlink the `node_modules` to only maintain a single install.
+    # See https://github.com/angular/dev-infra/pull/446#issuecomment-1059820287 for details.
+    symlink_node_modules = True,
+    yarn = YARN_LABEL,
+    yarn_lock = "//:yarn.lock",
+)
+
+yarn_install(
+    name = "aio_npm",
+    # Note that we add the postinstall scripts here so that the dependencies are re-installed
+    # when the postinstall patches are modified.
+    data = [
+        YARN_LABEL,
+        "//:.yarnrc",
+        "//aio:tools/cli-patches/bazel-architect-output.patch",
+        "//aio:tools/cli-patches/patch.js",
+    ],
+    # Currently disabled due to:
+    #  1. Missing Windows support currently.
+    #  2. Incompatibilites with the `ts_library` rule.
+    exports_directories_only = False,
+    manual_build_file_contents = npm_package_archives(),
+    package_json = "//aio:package.json",
+    # We prefer to symlink the `node_modules` to only maintain a single install.
+    # See https://github.com/angular/dev-infra/pull/446#issuecomment-1059820287 for details.
+    symlink_node_modules = True,
+    yarn = YARN_LABEL,
+    yarn_lock = "//aio:yarn.lock",
+)
+
+yarn_install(
+    name = "aio_example_deps",
+    # Rename the default js_library target from "node_modules" as this obscures the
+    # the source directory stamped as a filegroup in the manual BUILD contents below.
+    all_node_modules_target_name = "node_modules_all",
+    data = [
+        YARN_LABEL,
+        "//:.yarnrc",
+    ],
+    # Disabled because, when False, yarn_install preserves the node_modules folder
+    # with bin symlinks in the external repository. This is needed to link the shared
+    # set of deps for example e2es.
+    exports_directories_only = False,
+    manual_build_file_contents = """\
+filegroup(
+    name = "node_modules_files",
+    srcs = ["node_modules"],
+)
+""",
+    package_json = "//aio/tools/examples/shared:package.json",
+    yarn = YARN_LABEL,
+    yarn_lock = "//aio/tools/examples/shared:yarn.lock",
+)
+
+
+# Load protractor dependencies
+load("@npm//@bazel/protractor:package.bzl", "npm_bazel_protractor_dependencies")
+
+npm_bazel_protractor_dependencies()
 
 # Setup the rules_webtesting toolchain
 load("@io_bazel_rules_webtesting//web:repositories.bzl", "web_test_repositories")
 
 web_test_repositories()
 
-# TODO: Update browser repositories for rules_js compatibility
-# load("@npm//:@angular/build-tooling/bazel/browsers/browser_repositories.bzl", "browser_repositories")
+load("@npm//@angular/build-tooling/bazel/browsers:browser_repositories.bzl", "browser_repositories")
 
-# browser_repositories()
+browser_repositories()
 
-# TODO: Update esbuild repositories for rules_js compatibility
-# load("@build_bazel_rules_nodejs//toolchains/esbuild:esbuild_repositories.bzl", "esbuild_repositories")
-# esbuild_repositories(
-#     npm_repository = "npm",
-# )
+load("@build_bazel_rules_nodejs//toolchains/esbuild:esbuild_repositories.bzl", "esbuild_repositories")
+
+esbuild_repositories(
+    npm_repository = "npm",
+)
 
 load("@rules_pkg//:deps.bzl", "rules_pkg_dependencies")
 
@@ -149,10 +212,10 @@ sass_repositories(
     yarn_script = YARN_LABEL,
 )
 
-# TODO: Update git toolchains for rules_js compatibility
-# register_toolchains(
-#     "@npm//:@angular/build-tooling/bazel/git-toolchain/git_linux_toolchain",
-#     "@npm//:@angular/build-tooling/bazel/git-toolchain/git_macos_x86_toolchain", 
-#     "@npm//:@angular/build-tooling/bazel/git-toolchain/git_macos_arm64_toolchain",
-#     "@npm//:@angular/build-tooling/bazel/git-toolchain/git_windows_toolchain",
-# )
+# Register git toolchains
+register_toolchains(
+    "@npm//@angular/build-tooling/bazel/git-toolchain:git_linux_toolchain",
+    "@npm//@angular/build-tooling/bazel/git-toolchain:git_macos_x86_toolchain",
+    "@npm//@angular/build-tooling/bazel/git-toolchain:git_macos_arm64_toolchain",
+    "@npm//@angular/build-tooling/bazel/git-toolchain:git_windows_toolchain",
+)

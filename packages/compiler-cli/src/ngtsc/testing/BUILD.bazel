@@ -15,7 +15,8 @@ ts_library(
         "//packages/compiler-cli/src/ngtsc/file_system/testing",
         "//packages/compiler-cli/src/ngtsc/reflection",
         "//packages/compiler-cli/src/ngtsc/util",
-        "@npm//@bazel/runfiles",
+        # TODO: Migrate to rules_js equivalent - @npm/@bazel/runfiles causes cycle detection errors
+        # "@npm//@bazel/runfiles",
         "@npm//typescript",
     ],
 )

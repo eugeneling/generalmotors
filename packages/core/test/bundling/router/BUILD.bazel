@@ -37,7 +37,8 @@ ts_library(
         "//packages/core",
         "//packages/core/testing",
         "//packages/private/testing",
-        "@npm//@bazel/runfiles",
+        # TODO: Migrate to rules_js equivalent - @npm/@bazel/runfiles causes cycle detection errors
+        # "@npm//@bazel/runfiles",
     ],
 )
 

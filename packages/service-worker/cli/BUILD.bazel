@@ -1,4 +1,5 @@
-load("@npm//@bazel/esbuild:index.bzl", "esbuild", "esbuild_config")
+load("@build_bazel_rules_nodejs//:index.bzl", "js_binary")
+load("@npm//:esbuild/package_json.bzl", esbuild_bin = "bin")
 load("//tools:defaults.bzl", "ts_library")
 
 package(default_visibility = ["//visibility:public"])

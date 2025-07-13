@@ -1,7 +1,7 @@
 load("//:packages.bzl", "ALL_PACKAGES", "to_package_label")
-load("@aspect_rules_js//npm:defs.bzl", "npm_link")
-load("@aspect_rules_js//js:providers.bzl", "LinkablePackageInfo")
-load("@aspect_rules_js//npm:defs.bzl", "LinkerPackageMappingInfo")
+load("@build_bazel_rules_nodejs//:index.bzl", "npm_link")
+load("@build_bazel_rules_nodejs//:providers.bzl", "LinkablePackageInfo")
+load("@build_bazel_rules_nodejs//:providers.bzl", "LinkerPackageMappingInfo")
 
 def _is_angular_dep(dep):
     """Check if a dep , e.g., @aio_npm//@angular/core corresonds to a local Angular pacakge."""

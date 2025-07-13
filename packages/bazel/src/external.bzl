@@ -21,7 +21,7 @@ load(
     _TsConfigInfo = "TsConfigInfo",
 )
 load(
-    "@aspect_rules_js//js:providers.bzl",
+    "@build_bazel_rules_nodejs//:providers.bzl",
     _LinkablePackageInfo = "LinkablePackageInfo",
     _NpmPackageInfo = "NpmPackageInfo",
     _js_ecma_script_module_info = "js_ecma_script_module_info",

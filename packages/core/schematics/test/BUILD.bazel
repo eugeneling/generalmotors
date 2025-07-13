@@ -8,7 +8,8 @@ ts_library(
         "//packages/core/schematics/utils",
         "@npm//@angular-devkit/core",
         "@npm//@angular-devkit/schematics",
-        "@npm//@bazel/runfiles",
+        # TODO: Migrate to rules_js equivalent - @npm/@bazel/runfiles causes cycle detection errors
+        # "@npm//@bazel/runfiles",
         "@npm//@types/shelljs",
         "@npm//tslint",
     ],

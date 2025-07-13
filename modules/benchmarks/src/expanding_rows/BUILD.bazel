@@ -1,5 +1,6 @@
 load("//tools:defaults.bzl", "app_bundle", "http_server", "ng_module", "ts_library")
-load("@npm//@angular/build-tooling/bazel/benchmark/component_benchmark:benchmark_test.bzl", "benchmark_test")
+# TODO: Re-enable @angular/build-tooling with rules_js compatibility
+# load("@npm//@angular/build-tooling/bazel/benchmark/component_benchmark:benchmark_test.bzl", "benchmark_test")
 
 package(default_visibility = ["//modules/benchmarks:__subpackages__"])
 
@@ -25,7 +26,8 @@ ts_library(
     srcs = ["expanding_rows.perf-spec.ts"],
     tsconfig = "//modules/benchmarks:tsconfig-e2e.json",
     deps = [
-        "@npm//@angular/build-tooling/bazel/benchmark/driver-utilities",
+        # TODO: Migrate to rules_js equivalent - @npm/@angular/build-tooling causes cycle detection errors
+        # "@npm//@angular/build-tooling/bazel/benchmark/driver-utilities",
         "@npm//protractor",
     ],
 )

@@ -13,17 +13,14 @@ It packages your library following the Angular Package Format, see the
 specification of this format at https://goo.gl/jB3GVv
 """
 
-load("@aspect_rules_js//js:providers.bzl", "DeclarationInfo", "JSEcmaScriptModuleInfo", "LinkablePackageInfo", "NpmPackageInfo", "node_modules_aspect")
-load("@aspect_rules_js//npm:defs.bzl", "LinkerPackageMappingInfo")
-# TODO: Update pkg_npm functionality for rules_js compatibility
-# The pkg_npm functionality needs to be replaced with rules_js equivalents
-# For now, commenting out to resolve cycle detection errors
-# load(
-#     "@build_bazel_rules_nodejs//internal/pkg_npm:pkg_npm.bzl",
-#     "PKG_NPM_ATTRS",
-#     "PKG_NPM_OUTPUTS",
-#     "create_package",
-# )
+load("@build_bazel_rules_nodejs//:providers.bzl", "DeclarationInfo", "JSEcmaScriptModuleInfo", "LinkablePackageInfo", "NpmPackageInfo", "node_modules_aspect")
+load("@build_bazel_rules_nodejs//internal/linker:link_node_modules.bzl", "LinkerPackageMappingInfo")
+load(
+    "@build_bazel_rules_nodejs//internal/pkg_npm:pkg_npm.bzl",
+    "PKG_NPM_ATTRS",
+    "PKG_NPM_OUTPUTS",
+    "create_package",
+)
 load("//packages/bazel/src/ng_module:partial_compilation.bzl", "partial_compilation_transition")
 load("//packages/bazel/src/types_bundle:index.bzl", "bundle_type_declaration")
 

@@ -1,7 +1,7 @@
 """Re-export of some bazel rules with repository-wide defaults."""
 
 load("@rules_pkg//:pkg.bzl", "pkg_tar")
-load("@aspect_rules_js//js:defs.bzl", _npm_package_bin = "npm_package_bin", _pkg_npm = "pkg_npm")
+load("@build_bazel_rules_nodejs//:index.bzl", _npm_package_bin = "npm_package_bin", _pkg_npm = "pkg_npm")
 load("@npm//@bazel/jasmine:index.bzl", _jasmine_node_test = "jasmine_node_test")
 load("@npm//@bazel/concatjs:index.bzl", _ts_config = "ts_config", _ts_library = "ts_library")
 load("@npm//@bazel/rollup:index.bzl", _rollup_bundle = "rollup_bundle")
@@ -281,8 +281,9 @@ def karma_web_test_suite(
         name,
         external = [],
         browsers = [
-            "@npm//@angular/build-tooling/bazel/browsers/chromium:chromium",
-            "@npm//@angular/build-tooling/bazel/browsers/firefox:firefox",
+            # TODO: Migrate to rules_js equivalent - @npm/@angular/build-tooling causes cycle detection errors
+            # "@npm//@angular/build-tooling/bazel/browsers/chromium:chromium",
+            # "@npm//@angular/build-tooling/bazel/browsers/firefox:firefox",
         ],
         **kwargs):
     """Default values for karma_web_test_suite"""
@@ -349,7 +350,10 @@ def protractor_web_test_suite(
         name,
         deps = [],
         external = [],
-        browsers = ["@npm//@angular/build-tooling/bazel/browsers/chromium:chromium"],
+        browsers = [
+            # TODO: Migrate to rules_js equivalent - @npm/@angular/build-tooling causes cycle detection errors
+            # "@npm//@angular/build-tooling/bazel/browsers/chromium:chromium"
+        ],
         **kwargs):
     """Default values for protractor_web_test_suite"""
     spec_bundle(
