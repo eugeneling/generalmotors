@@ -5,7 +5,7 @@ index 77fcd99..8c65658 100755
 @@ -14,7 +14,7 @@
  "Run end-to-end tests with Protractor"
  
- load("@rules_nodejs//nodejs:providers.bzl", "JSModuleInfo")
+ load("@build_bazel_rules_nodejs//nodejs:providers.bzl", "JSModuleInfo")
 -load("@build_bazel_rules_nodejs//:index.bzl", "nodejs_binary")
 +load("@angular//tools/esm-interop:index.bzl", "nodejs_binary")
  load("@build_bazel_rules_nodejs//:providers.bzl", "ExternalNpmPackageInfo", "JSNamedModuleInfo", "node_modules_aspect")

@@ -23,18 +23,35 @@ http_archive(
     urls = ["https://github.com/bazelbuild/rules_webtesting/releases/download/0.3.5/rules_webtesting.tar.gz"],
 )
 
+# Use bazel-contrib/rules_nodejs 6.4.0 for Node.js 20+ support
 http_archive(
     name = "rules_nodejs",
     sha256 = "8bfd114e95e88df5ecc66b03b726944f47a8b46db4b3b6ace87cfc316713bd1c",
-    strip_prefix = "rules_nodejs-6.4.0",
-    url = "https://github.com/bazel-contrib/rules_nodejs/releases/download/v6.4.0/rules_nodejs-v6.4.0.tar.gz",
+    urls = ["https://github.com/bazel-contrib/rules_nodejs/releases/download/v6.4.0/rules_nodejs-v6.4.0.tar.gz"],
 )
 
-load("@rules_nodejs//nodejs:repositories.bzl", "nodejs_repositories")
+load("@rules_nodejs//nodejs:repositories.bzl", "nodejs_register_toolchains")
 
-nodejs_repositories(
+nodejs_register_toolchains(
+    name = "nodejs",
     node_version = "20.11.0",
 )
+
+# Use bazelbuild/rules_nodejs for yarn_install functionality (hybrid approach)
+http_archive(
+    name = "build_bazel_rules_nodejs",
+    patches = [
+        # TODO(devversion): remove when https://github.com/bazelbuild/rules_nodejs/pull/3605 is available.
+        "//tools:bazel-repo-patches/rules_nodejs__#3605.patch",
+        "//tools/esm-interop:patches/bazel/nodejs_binary_esm_support.patch",
+    ],
+    sha256 = "c29944ba9b0b430aadcaf3bf2570fece6fc5ebfb76df145c6cdad40d65c20811",
+    urls = ["https://github.com/bazelbuild/rules_nodejs/releases/download/5.7.0/rules_nodejs-5.7.0.tar.gz"],
+)
+
+load("@build_bazel_rules_nodejs//:repositories.bzl", "build_bazel_rules_nodejs_dependencies")
+
+build_bazel_rules_nodejs_dependencies()
 
 # The PKG rules are needed to build tar packages for integration tests. The builtin
 # rule in `@bazel_tools` is not Windows compatible and outdated.
@@ -55,10 +72,8 @@ http_archive(
     url = "https://github.com/aspect-build/bazel-lib/archive/refs/tags/v1.23.2.tar.gz",
 )
 
-# Node.js toolchain is now set up by nodejs_repositories() above
-
 # Download npm dependencies.
-load("@rules_nodejs//nodejs:yarn_install.bzl", "yarn_install")
+load("@build_bazel_rules_nodejs//:index.bzl", "yarn_install")
 load("//integration:npm_package_archives.bzl", "npm_package_archives")
 
 yarn_install(
@@ -71,8 +86,8 @@ yarn_install(
         "//tools:postinstall-patches.js",
         "//tools/esm-interop:patches/npm/@angular+build-tooling+0.0.0-e859696da7af56c811b6589f1ae888222d93d797.patch",
         "//tools/esm-interop:patches/npm/@bazel+concatjs+5.8.1.patch",
-        "//tools/esm-interop:patches/npm/@bazel+esbuild+5.7.1.patch",
-        "//tools/esm-interop:patches/npm/@bazel+protractor+5.7.1.patch",
+        "//tools/esm-interop:patches/npm/@bazel+esbuild+5.8.1.patch",
+        "//tools/esm-interop:patches/npm/@bazel+protractor+5.8.1.patch",
         "//tools/esm-interop:patches/npm/rxjs+6.6.7.patch",
     ],
     # Currently disabled due to:
@@ -153,8 +168,11 @@ load("@npm//@angular/build-tooling/bazel/browsers:browser_repositories.bzl", "br
 
 browser_repositories()
 
-# esbuild_repositories is no longer available in rules_nodejs 6.4.0
-# esbuild functionality is now handled through npm packages
+load("@build_bazel_rules_nodejs//toolchains/esbuild:esbuild_repositories.bzl", "esbuild_repositories")
+
+esbuild_repositories(
+    npm_repository = "npm",
+)
 
 load("@rules_pkg//:deps.bzl", "rules_pkg_dependencies")
 

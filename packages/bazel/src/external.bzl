@@ -29,7 +29,7 @@ load(
     _node_modules_aspect = "node_modules_aspect",
 )
 load(
-    "@rules_nodejs//nodejs:providers.bzl",
+    "@build_bazel_rules_nodejs//nodejs:providers.bzl",
     _js_module_info = "js_module_info",
 )
 

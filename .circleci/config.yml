@@ -26,15 +26,15 @@ version: 2.1
 # **NOTE 4 **: To make sure modified patches can be applied without needing to manually update the cache key,
 #              the fallback cache key will not match if patches have been modified.
 # See https://circleci.com/docs/2.0/caching/#restoring-cache for how prefixes work in CircleCI.
-var_3: &cache_key v8-angular-node-18-{{ checksum "month.txt" }}-{{ checksum "patches.hash"}}-{{ checksum ".bazelversion" }}-{{ checksum "yarn.lock" }}-{{ checksum "WORKSPACE" }}-{{ checksum "aio/yarn.lock" }}
+var_3: &cache_key v8-angular-node-20-{{ checksum "month.txt" }}-{{ checksum "patches.hash"}}-{{ checksum ".bazelversion" }}-{{ checksum "yarn.lock" }}-{{ checksum "WORKSPACE" }}-{{ checksum "aio/yarn.lock" }}
 # We invalidate the cache if the Bazel version changes because otherwise the `bazelisk` cache
 # folder will contain all previously used versions and ultimately cause the cache restoring to
 # be slower due to its growing size.
-var_4: &cache_key_fallback v8-angular-node-18-{{ checksum "month.txt" }}-{{ checksum "patches.hash"}}-{{ checksum ".bazelversion" }}
+var_4: &cache_key_fallback v8-angular-node-20-{{ checksum "month.txt" }}-{{ checksum "patches.hash"}}-{{ checksum ".bazelversion" }}
 
 # Windows needs its own cache key because binaries in node_modules are different.
-var_3_win: &cache_key_win v10-angular-win-node-18-{{ checksum "month.txt" }}-{{ checksum "patches.hash"}}-{{ checksum ".bazelversion" }}-{{ checksum "yarn.lock" }}-{{ checksum "WORKSPACE" }}
-var_4_win: &cache_key_win_fallback v10-angular-win-node-18-{{ checksum "month.txt" }}-{{ checksum "patches.hash"}}-{{ checksum ".bazelversion" }}
+var_3_win: &cache_key_win v10-angular-win-node-20-{{ checksum "month.txt" }}-{{ checksum "patches.hash"}}-{{ checksum ".bazelversion" }}-{{ checksum "yarn.lock" }}-{{ checksum "WORKSPACE" }}
+var_4_win: &cache_key_win_fallback v10-angular-win-node-20-{{ checksum "month.txt" }}-{{ checksum "patches.hash"}}-{{ checksum ".bazelversion" }}
 
 # Workspace initially persisted by the `setup` job, and then enhanced by `build-npm-packages`.
 # https://circleci.com/docs/2.0/workflows/#using-workspaces-to-share-data-among-jobs
