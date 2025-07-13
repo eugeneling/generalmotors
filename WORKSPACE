@@ -25,11 +25,6 @@ http_archive(
 
 http_archive(
     name = "build_bazel_rules_nodejs",
-    patches = [
-        # TODO(devversion): remove when https://github.com/bazelbuild/rules_nodejs/pull/3605 is available.
-        "//tools:bazel-repo-patches/rules_nodejs__#3605.patch",
-        "//tools/esm-interop:patches/bazel/nodejs_binary_esm_support.patch",
-    ],
     sha256 = "c29944ba9b0b430aadcaf3bf2570fece6fc5ebfb76df145c6cdad40d65c20811",
     urls = ["https://github.com/bazelbuild/rules_nodejs/releases/download/5.7.0/rules_nodejs-5.7.0.tar.gz"],
 )
@@ -37,6 +32,14 @@ http_archive(
 load("@build_bazel_rules_nodejs//:repositories.bzl", "build_bazel_rules_nodejs_dependencies")
 
 build_bazel_rules_nodejs_dependencies()
+
+# Setup the Node.js toolchain.
+load("@rules_nodejs//nodejs:repositories.bzl", "nodejs_register_toolchains")
+
+nodejs_register_toolchains(
+    name = "nodejs",
+    node_version = "18.19.0",
+)
 
 # The PKG rules are needed to build tar packages for integration tests. The builtin
 # rule in `@bazel_tools` is not Windows compatible and outdated.
@@ -57,13 +60,7 @@ http_archive(
     url = "https://github.com/aspect-build/bazel-lib/archive/refs/tags/v1.23.2.tar.gz",
 )
 
-# Setup the Node.js toolchain.
-load("@rules_nodejs//nodejs:repositories.bzl", "nodejs_register_toolchains")
-
-nodejs_register_toolchains(
-    name = "nodejs",
-    node_version = "16.13.0",
-)
+# Node.js toolchain is now set up by nodejs_repositories() above
 
 # Download npm dependencies.
 load("@build_bazel_rules_nodejs//:index.bzl", "yarn_install")
