@@ -1,5 +1,6 @@
 load("@build_bazel_rules_nodejs//:index.bzl", "nodejs_binary")
 load("@build_bazel_rules_nodejs//:index.bzl", "npm_package_bin")
+load("@npm//@bazel/esbuild:index.bzl", "esbuild", "esbuild_config")
 load("//packages/bazel/src:ng_perf.bzl", "ng_perf_flag")
 load("//tools:defaults.bzl", "api_golden_test", "extract_types", "pkg_npm", "ts_config", "ts_library")
 
