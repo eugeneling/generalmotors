@@ -13,7 +13,8 @@ example_test(
     server = "//modules/playground/src/sourcemap:devserver",
     use_legacy_webdriver_types = False,
     deps = [
-        "@npm//@bazel/runfiles",
+        # TODO: Migrate to rules_js equivalent - @npm/@bazel/runfiles causes cycle detection errors
+        # "@npm//@bazel/runfiles",
         "@npm//source-map",
     ],
 )

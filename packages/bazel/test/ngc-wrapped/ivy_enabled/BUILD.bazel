@@ -6,7 +6,8 @@ ts_library(
     testonly = True,
     srcs = ["ng_module_ivy_test.ts"],
     tags = [],
-    deps = ["@npm//@bazel/runfiles"],
+    # TODO: Migrate to rules_js equivalent - @npm/@bazel/runfiles causes cycle detection errors
+    # deps = ["@npm//@bazel/runfiles"],
 )
 
 ng_module(

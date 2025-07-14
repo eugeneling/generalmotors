@@ -15,7 +15,8 @@ ts_library(
     srcs = ["largetable.perf-spec.ts"],
     tsconfig = "//modules/benchmarks:tsconfig-e2e.json",
     deps = [
-        "@npm//@angular/build-tooling/bazel/benchmark/driver-utilities",
+        # TODO: Migrate to rules_js equivalent - @npm/@angular/build-tooling causes cycle detection errors
+        # "@npm//@angular/build-tooling/bazel/benchmark/driver-utilities",
         "@npm//protractor",
     ],
 )
@@ -26,7 +27,8 @@ ts_library(
     srcs = ["largetable.e2e-spec.ts"],
     tsconfig = "//modules/benchmarks:tsconfig-e2e.json",
     deps = [
-        "@npm//@angular/build-tooling/bazel/benchmark/driver-utilities",
+        # TODO: Migrate to rules_js equivalent - @npm/@angular/build-tooling causes cycle detection errors
+        # "@npm//@angular/build-tooling/bazel/benchmark/driver-utilities",
         "@npm//protractor",
     ],
 )

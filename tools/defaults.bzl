@@ -281,8 +281,9 @@ def karma_web_test_suite(
         name,
         external = [],
         browsers = [
-            "@npm//@angular/build-tooling/bazel/browsers/chromium:chromium",
-            "@npm//@angular/build-tooling/bazel/browsers/firefox:firefox",
+            # TODO: Migrate to rules_js equivalent - @npm/@angular/build-tooling causes cycle detection errors
+            # "@npm//@angular/build-tooling/bazel/browsers/chromium:chromium",
+            # "@npm//@angular/build-tooling/bazel/browsers/firefox:firefox",
         ],
         **kwargs):
     """Default values for karma_web_test_suite"""
@@ -349,7 +350,10 @@ def protractor_web_test_suite(
         name,
         deps = [],
         external = [],
-        browsers = ["@npm//@angular/build-tooling/bazel/browsers/chromium:chromium"],
+        browsers = [
+            # TODO: Migrate to rules_js equivalent - @npm/@angular/build-tooling causes cycle detection errors
+            # "@npm//@angular/build-tooling/bazel/browsers/chromium:chromium"
+        ],
         **kwargs):
     """Default values for protractor_web_test_suite"""
     spec_bundle(

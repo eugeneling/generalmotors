@@ -23,6 +23,8 @@ http_archive(
     urls = ["https://github.com/bazelbuild/rules_webtesting/releases/download/0.3.5/rules_webtesting.tar.gz"],
 )
 
+
+
 http_archive(
     name = "build_bazel_rules_nodejs",
     patches = [
@@ -37,6 +39,14 @@ http_archive(
 load("@build_bazel_rules_nodejs//:repositories.bzl", "build_bazel_rules_nodejs_dependencies")
 
 build_bazel_rules_nodejs_dependencies()
+
+# Setup the Node.js toolchain.
+load("@rules_nodejs//nodejs:repositories.bzl", "nodejs_register_toolchains")
+
+nodejs_register_toolchains(
+    name = "nodejs",
+    node_version = "18.10.0",
+)
 
 # The PKG rules are needed to build tar packages for integration tests. The builtin
 # rule in `@bazel_tools` is not Windows compatible and outdated.
@@ -57,13 +67,12 @@ http_archive(
     url = "https://github.com/aspect-build/bazel-lib/archive/refs/tags/v1.23.2.tar.gz",
 )
 
-# Setup the Node.js toolchain.
-load("@rules_nodejs//nodejs:repositories.bzl", "nodejs_register_toolchains")
+# TODO: Handle AIO dependencies separately if needed
+# For now, we'll use the main npm workspace for all dependencies
 
-nodejs_register_toolchains(
-    name = "nodejs",
-    node_version = "16.13.0",
-)
+load("@aspect_bazel_lib//lib:repositories.bzl", "aspect_bazel_lib_dependencies")
+
+aspect_bazel_lib_dependencies()
 
 # Download npm dependencies.
 load("@build_bazel_rules_nodejs//:index.bzl", "yarn_install")
@@ -79,8 +88,8 @@ yarn_install(
         "//tools:postinstall-patches.js",
         "//tools/esm-interop:patches/npm/@angular+build-tooling+0.0.0-e859696da7af56c811b6589f1ae888222d93d797.patch",
         "//tools/esm-interop:patches/npm/@bazel+concatjs+5.8.1.patch",
-        "//tools/esm-interop:patches/npm/@bazel+esbuild+5.7.1.patch",
-        "//tools/esm-interop:patches/npm/@bazel+protractor+5.7.1.patch",
+        "//tools/esm-interop:patches/npm/@bazel+esbuild+5.8.1.patch",
+        "//tools/esm-interop:patches/npm/@bazel+protractor+5.8.1.patch",
         "//tools/esm-interop:patches/npm/rxjs+6.6.7.patch",
     ],
     # Currently disabled due to:
@@ -143,9 +152,6 @@ filegroup(
     yarn_lock = "//aio/tools/examples/shared:yarn.lock",
 )
 
-load("@aspect_bazel_lib//lib:repositories.bzl", "aspect_bazel_lib_dependencies")
-
-aspect_bazel_lib_dependencies()
 
 # Load protractor dependencies
 load("@npm//@bazel/protractor:package.bzl", "npm_bazel_protractor_dependencies")

@@ -1,5 +1,6 @@
 load("//tools:defaults.bzl", "app_bundle", "http_server", "ng_module")
-load("@npm//@angular/build-tooling/bazel/benchmark/component_benchmark:benchmark_test.bzl", "benchmark_test")
+# TODO: Re-enable @angular/build-tooling with rules_js compatibility
+# load("@npm//@angular/build-tooling/bazel/benchmark/component_benchmark:benchmark_test.bzl", "benchmark_test")
 
 package(default_visibility = ["//modules/benchmarks:__subpackages__"])
 
@@ -40,8 +41,9 @@ http_server(
     ],
 )
 
-benchmark_test(
-    name = "perf",
-    server = ":prodserver",
-    deps = ["//modules/benchmarks/src/js-web-frameworks:perf_lib"],
-)
+# TODO: Re-enable benchmark_test with rules_js compatibility
+# benchmark_test(
+#     name = "perf",
+#     server = ":prodserver",
+#     deps = ["//modules/benchmarks/src/js-web-frameworks:perf_lib"],
+# )

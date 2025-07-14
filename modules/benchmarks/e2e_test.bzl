@@ -9,7 +9,8 @@ load("//tools:defaults.bzl", "protractor_web_test_suite")
 def e2e_test(name, server, **kwargs):
     protractor_web_test_suite(
         name = name,
-        on_prepare = "@npm//@angular/build-tooling/bazel/benchmark/component_benchmark:start-server.js",
+        # TODO: Migrate to rules_js equivalent - @npm/@angular/build-tooling causes cycle detection errors
+        # on_prepare = "@npm//@angular/build-tooling/bazel/benchmark/component_benchmark:start-server.js",
         server = server,
         **kwargs
     )

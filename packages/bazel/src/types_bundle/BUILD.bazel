@@ -10,7 +10,8 @@ ts_library(
         "index.ts",
     ],
     deps = [
-        "@npm//@bazel/worker",
+        # TODO: Migrate to rules_js equivalent - @npm/@bazel/worker causes cycle detection errors
+        # "@npm//@bazel/worker",
         "@npm//@microsoft/api-extractor",
         "@npm//@types/node",
     ],

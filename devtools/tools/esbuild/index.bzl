@@ -1,6 +1,7 @@
 load("//devtools:packages.bzl", "ANGULAR_PACKAGES")
-load("@npm//@angular/build-tooling/bazel/esbuild:index.bzl", "esbuild")
-load("@build_bazel_rules_nodejs//internal/linker:link_node_modules.bzl", "LinkerPackageMappingInfo")
+# TODO: Re-enable @angular/build-tooling with rules_js compatibility
+# load("@npm//@angular/build-tooling/bazel/esbuild:index.bzl", "esbuild")
+load("@build_bazel_rules_nodejs//:index.bzl", "LinkerPackageMappingInfo")
 load("@build_bazel_rules_nodejs//:providers.bzl", "ExternalNpmPackageInfo", "JSModuleInfo")
 
 """

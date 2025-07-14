@@ -17,7 +17,8 @@ ts_library(
     deps = [
         "//packages/compiler-cli",
         "//packages/compiler-cli/private",
-        "@npm//@bazel/concatjs",
+        # TODO: Migrate to rules_js equivalent - @npm/@bazel/concatjs causes cycle detection errors
+        # "@npm//@bazel/concatjs",
         "@npm//@types/node",
         "@npm//tsickle",
         "@npm//typescript",

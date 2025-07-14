@@ -1,4 +1,5 @@
-load("@npm//@bazel/esbuild:index.bzl", "esbuild", "esbuild_config")
+load("@build_bazel_rules_nodejs//:index.bzl", "js_binary")
+load("@npm//:esbuild/package_json.bzl", esbuild_bin = "bin")
 load("//tools:defaults.bzl", "extract_types", "pkg_npm", "ts_library")
 
 ts_library(
@@ -23,34 +24,27 @@ ts_library(
     ],
 )
 
-esbuild_config(
-    name = "esbuild_config",
-    config_file = "esbuild.config.js",
-)
-
-esbuild(
+esbuild_bin.esbuild_binary(
     name = "bundles",
-    config = ":esbuild_config",
-    entry_points = [
+    srcs = [
         ":index.ts",
         ":src/extract/cli.ts",
         ":src/migrate/cli.ts",
         ":src/translate/cli.ts",
-    ],
-    external = [
-        "@angular/localize",
-        "@angular/compiler",
-        "@angular/compiler-cli/private/localize",
-        "@babel/core",
-        "yargs",
-        "glob",
-    ],
-    format = "esm",
-    platform = "node",
-    splitting = True,
-    target = "node12",
-    deps = [
-        ":tools",
+    ] + [":tools"],
+    args = [
+        "--bundle",
+        "--format=esm",
+        "--platform=node",
+        "--target=node12",
+        "--splitting",
+        "--external:@angular/localize",
+        "--external:@angular/compiler",
+        "--external:@angular/compiler-cli/private/localize",
+        "--external:@babel/core",
+        "--external:yargs",
+        "--external:glob",
+        "--outdir=$(RULEDIR)",
     ],
 )
 

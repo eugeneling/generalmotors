@@ -1,5 +1,5 @@
 load("//tools:defaults.bzl", "rollup_bundle", "ts_library")
-load("@npm//@bazel/concatjs:index.bzl", "karma_web_test_suite")
+load("@build_bazel_rules_nodejs//:index.bzl", "karma_web_test_suite")
 
 def karma_test_prepare(name, env_srcs, env_deps, env_entry_point, test_srcs, test_deps, test_entry_point):
     ts_library(
@@ -72,7 +72,8 @@ def karma_test(name, env_srcs, env_deps, env_entry_point, test_srcs, test_deps, 
                             ":" + name + "_env_rollup.umd",
                         ] + bootstrap +
                         _karma_test_required_dist_files,
-            browsers = ["@npm//@angular/build-tooling/bazel/browsers/chromium:chromium"],
+            # TODO: Migrate to rules_js equivalent - @npm/@angular/build-tooling causes cycle detection errors
+            # browsers = ["@npm//@angular/build-tooling/bazel/browsers/chromium:chromium"],
             static_files = [
                 ":assets/sample.json",
                 ":assets/worker.js",
@@ -95,7 +96,8 @@ def karma_test(name, env_srcs, env_deps, env_entry_point, test_srcs, test_deps, 
                     ":" + name + "_env_rollup.umd",
                     "//packages/zone.js/bundles:zone-testing-bundle.umd.min.js",
                 ] + _karma_test_required_dist_files,
-                browsers = ["@npm//@angular/build-tooling/bazel/browsers/chromium:chromium"],
+                # TODO: Migrate to rules_js equivalent - @npm/@angular/build-tooling causes cycle detection errors
+                # browsers = ["@npm//@angular/build-tooling/bazel/browsers/chromium:chromium"],
                 config_file = "//:karma-js.conf.js",
                 configuration_env_vars = ["KARMA_WEB_TEST_MODE"],
                 data = [

@@ -1,5 +1,6 @@
 load("//tools:defaults.bzl", "app_bundle", "ts_library")
-load("@npm//@angular/build-tooling/bazel/map-size-tracking:index.bzl", "js_mapping_size_test")
+# TODO: Re-enable @angular/build-tooling with rules_js compatibility
+# load("@npm//@angular/build-tooling/bazel/map-size-tracking:index.bzl", "js_mapping_size_test")
 
 package(default_visibility = ["//visibility:public"])
 
